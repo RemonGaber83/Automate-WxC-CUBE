@@ -1,0 +1,158 @@
+conf t
+ip name-server 8.8.8.8
+ip domain lookup source-interface WxC_SourceInterfaceName
+ip domain name Company_DomainName
+!
+password encryption aes
+!
+crypto pki trustpool import clean url http://www.cisco.com/security/pki/trs/ios_core.p7b
+!
+!
+voice service voip
+ ip address trusted list
+  ipv4 199.59.64.0 255.255.255.128
+  ipv4 199.59.67.0 255.255.255.128
+ media-address range WxC_SourceInterfaceIP WxC_SourceInterfaceIP port-range 8000 48000
+ media statistics
+ media bulk-stats
+ allow-connections sip to sip
+ no supplementary-service sip refer
+ no supplementary-service sip handle-replaces
+ stun
+  stun flowdata agent-id 1 boot-count 20
+  stun flowdata shared-secret 7 104D000A061811021F0725282D3B303A
+ sip
+  registrar server
+!
+!
+voice class uri 200 sip
+ pattern :8934
+!
+voice class uri 100 sip
+ pattern :5060
+!
+voice class codec 99
+ codec preference 1 g711alaw
+ codec preference 2 g711ulaw
+ codec preference 3 g729r8
+!
+voice class stun-usage 200
+ stun usage firewall-traversal flowdata
+!
+!
+voice class sip-profiles 200
+ rule 9 request ANY sip-header SIP-Req-URI modify "sips:(.*)" "sip:\1" 
+ rule 10 request ANY sip-header To modify "<sips:(.*)" "<sip:\1" 
+ rule 11 request ANY sip-header From modify "<sips:" "<sip:\1" 
+ rule 12 request ANY sip-header Contact modify "<sips:(.*)>" "<sip:\1;transport=tls>" 
+ rule 13 response ANY sip-header To modify "<sips:(.*)" "<sip:\1" 
+ rule 14 response ANY sip-header From modify "<sips:(.*)" "<sip:\1" 
+ rule 15 response ANY sip-header Contact modify "<sips:(.*)" "<sip:\1" 
+ rule 20 request ANY sip-header From modify ">" ";otg=WxC_Username>" 
+ rule 30 request ANY sip-header P-Asserted-Identity modify "sips:(.*)" "sip:\1" 
+!
+!
+!
+voice class dpg 101
+ dial-peer 101 preference 1
+!
+voice class dpg 201
+ dial-peer 201 preference 1
+!
+!
+voice class tenant 200
+  registrar dns:WxC_RegistrarDomain scheme sips expires 240 refresh-ratio 50 tcp tls
+  credentials number WxC_LinePort username WxC_Username password 0 WxC_Password realm WxC_RegistrarDomain
+  authentication username WxC_Username password 0 WxC_Password realm BroadWorks
+  authentication username WxC_Username password 0 WxC_Password realm WxC_RegistrarDomain
+  no remote-party-id
+  sip-server dns:WxC_RegistrarDomain
+  connection-reuse
+  session transport tcp tls
+  url sips
+  error-passthru
+  asserted-id pai
+  bind control source-interface WxC_SourceInterfaceName
+  bind media source-interface WxC_SourceInterfaceName
+  no pass-thru content custom-sdp
+  sip-profiles 200
+  outbound-proxy dns:WxC_OutboundProxyAddress
+  privacy-policy passthru
+!
+!
+voice class srtp-crypto 200
+ crypto 1 AES_CM_128_HMAC_SHA1_80
+!
+!
+!
+!
+voice translation-rule 1
+ rule 1 /^.*\(WxC_ExtensionsRange\)$/ /\1/
+!
+voice translation-rule 2
+ rule 1 /^\+61\(.*\)/ /0\1/
+!
+!
+voice translation-profile pstn-in
+ translate called 1
+!
+voice translation-profile pstn-out
+ translate calling 2
+!
+!
+!
+!
+!
+dial-peer voice 200 voip
+ description Incoming from WxC
+ session protocol sipv2
+ destination dpg 101
+ incoming uri via 200
+ voice-class codec 99  
+ voice-class stun-usage 200
+ voice-class sip tenant 200
+ srtp
+!
+dial-peer voice 101 voip
+ description Outgoing to PSTN
+ translation-profile outgoing pstn-out
+ destination-pattern .T
+ session protocol sipv2
+ session target ipv4:WxC_PSTNIP
+ voice-class codec 99  
+ dtmf-relay rtp-nte
+!
+dial-peer voice 100 voip
+ description Incoming dial-peer from PSTN
+ translation-profile incoming pstn-in
+ session protocol sipv2
+ destination dpg 201
+ incoming uri via 100
+ voice-class codec 99  
+ dtmf-relay rtp-nte
+!
+dial-peer voice 201 voip
+ description Outgoing dial-peer to WxC
+ destination-pattern .T
+ session protocol sipv2
+ session target sip-server
+ voice-class codec 99  
+ voice-class stun-usage 200
+ no voice-class sip localhost
+ voice-class sip tenant 200
+ dtmf-relay rtp-nte
+ srtp
+!
+voice class dpg 101
+ dial-peer 101 preference 1
+!
+voice class dpg 201
+ dial-peer 201 preference 1
+!
+sip-ua 
+ transport tcp tls v1.2
+ crypto signaling default trustpoint dummyTp    
+!
+!
+!
+ntp server 0.au.pool.ntp.org
