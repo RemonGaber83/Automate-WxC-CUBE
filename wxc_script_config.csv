@@ -1,2 +1,2 @@
-WxC_Username,WxC_Password,WxC_RegistrarDomain,WxC_OutboundProxyAddress,WxC_LinePort,WxC_SourceInterfaceName,WxC_SourceInterfaceIP,WxC_ExtensionsRange,WxC_PSTNIP,Company_DomainName,cfg_template,CUBE_IP,CUBE_Username,CUBE_Password
-Kytec_SIP3011_LGU,${k1RVdsdX,27853522.cisco-bcld.com,sy11.sipconnect-au.bcld.webex.com,Kytec_SIP0816_LGU,GigabitEthernet1,10.20.105.246,7XXX,10.3.12.20,kytec.com.au,config_template.txt,10.20.105.248,admin,C!sc0123
+WxC_Username,WxC_Password,WxC_RegistrarDomain,WxC_OutboundProxyAddress,WxC_LinePort,WxC_SourceInterfaceName,WxC_SourceInterfaceIP,WxC_ExtensionsRange,WxC_PSTNIP,Company_DomainName,cfg_template,CUBE_IP,CUBE_Username,CUBE_Password,CUBE_SaveConfig
+ABC_SIP3011_LGU,${k1RVdsdX,27853522.cisco-bcld.com,sy11.sipconnect-au.bcld.webex.com,ABC_SIP0816_LGU,GigabitEthernet1,10.20.105.246,7XXX,10.3.12.20,ABC.com.au,config_template.txt,10.20.105.248,admin,C!sc0123,NO
