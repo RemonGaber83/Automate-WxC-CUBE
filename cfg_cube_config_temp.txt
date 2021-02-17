@@ -1,7 +1,7 @@
 conf t
 ip name-server 8.8.8.8
 ip domain lookup source-interface GigabitEthernet1
-ip domain name kytec.com.au
+ip domain name ABC.com.au
 !
 password encryption aes
 !
@@ -48,7 +48,7 @@ voice class sip-profiles 200
  rule 13 response ANY sip-header To modify "<sips:(.*)" "<sip:\1" 
  rule 14 response ANY sip-header From modify "<sips:(.*)" "<sip:\1" 
  rule 15 response ANY sip-header Contact modify "<sips:(.*)" "<sip:\1" 
- rule 20 request ANY sip-header From modify ">" ";otg=Kytec_SIP3011_LGU>" 
+ rule 20 request ANY sip-header From modify ">" ";otg=ABC_SIP3011_LGU>" 
  rule 30 request ANY sip-header P-Asserted-Identity modify "sips:(.*)" "sip:\1" 
 !
 !
@@ -62,9 +62,9 @@ voice class dpg 201
 !
 voice class tenant 200
   registrar dns:27853522.cisco-bcld.com scheme sips expires 240 refresh-ratio 50 tcp tls
-  credentials number Kytec_SIP0816_LGU username Kytec_SIP3011_LGU password 0 ${k1RV11mX realm 27853522.cisco-bcld.com
-  authentication username Kytec_SIP3011_LGU password 0 ${k1RV11mX realm BroadWorks
-  authentication username Kytec_SIP3011_LGU password 0 ${k1RV11mX realm 27853522.cisco-bcld.com
+  credentials number ABC_SIP0816_LGU username ABC_SIP3011_LGU password 0 ${k1RVdsdX realm 27853522.cisco-bcld.com
+  authentication username ABC_SIP3011_LGU password 0 ${k1RVdsdX realm BroadWorks
+  authentication username ABC_SIP3011_LGU password 0 ${k1RVdsdX realm 27853522.cisco-bcld.com
   no remote-party-id
   sip-server dns:27853522.cisco-bcld.com
   connection-reuse
