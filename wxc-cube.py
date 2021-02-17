@@ -76,16 +76,18 @@ try:
     logging.debug('## Configuration file has been sent to the router')
     print(todaydatelog+ "-- Configuration file has been sent to the router")
     print(todaydatelog+ "-- Please wait 2-3 minutes untill the trunk is registered")
-    time.sleep(150) # Sleep for 3 seconds
+    time.sleep(30) # Sleep for 3 seconds
 ##########################################################################################
 ############################# Check Registeration Status #################################
     send_cli = net_connect.send_command("show sip-ua register status")
     send_cli = send_cli.split()
     regiter_status = send_cli[send_cli.index(WxC_LinePort)+3]
+    print(regiter_status)
     if regiter_status == 'no':
-        print(todaydatelog+ "-- Your WebEx Calling Trunk has not reistered please check your WxC credentials, DNS or IP network configuration")
-        logging.debug('Your WebEx Calling Trunk has not reistered please check your WxC credentials, DNS or IP network configuration')
-    print(todaydatelog+ "-- Your WebEx Calling Trunk has successfully registered")
+        print(todaydatelog+ "-- The WebEx Calling trunk has failed to register please check your WxC SIP trunk credentials, DNS or IP network configuration")
+        logging.debug('Your WebEx Calling Trunk has not reistered please check your WxC SIP trunk credentials, DNS or IP network configuration')
+    else:
+        print(todaydatelog+ "-- The WebEx Calling Trunk has successfully registered")
     logging.debug('Your WebEx Calling Trunk has successfully registered')
 except Exception as err:
     print(err)
