@@ -76,7 +76,7 @@ try:
     logging.debug('## Configuration file has been sent to the router')
     print(todaydatelog+ "-- Configuration file has been sent to the router")
     print(todaydatelog+ "-- Please wait 2-3 minutes untill the trunk is registered")
-    time.sleep(30) # Sleep for 3 seconds
+    time.sleep(150) # Sleep for 3 seconds
 ##########################################################################################
 ############################# Check Registeration Status #################################
     send_cli = net_connect.send_command("show sip-ua register status")
